@@ -59,3 +59,5 @@ Contributors
 * Mark Galloway
 * Abram Hindle
 * Cole Mackenzie
+
+* HAOYANG HONG
