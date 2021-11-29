@@ -36,6 +36,7 @@ var H = canvas.height = window.innerHeight-50;
 var wscounter = 0;
 var socket;
 
+
 function debug(str) {
     var debugDiv = document.getElementById('debug');
     debugDiv.innerHTML = "" + str;
@@ -43,6 +44,7 @@ function debug(str) {
 debug("Test");
 
 world = {};
+queue = {};
 
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
@@ -123,12 +125,15 @@ function getPosition(e) {
 
 function addEntity(entity, data) {
     world[entity] = data;
+    queue[entity] = data;
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
+    socket.send(JSON.stringify(queue));
 }
+
 var counter = 0;
 function addEntityWithoutName(data) {
-    var name = "X"+(counter++)%100;
+    var entity_num = (counter++)%100;
     addEntity(name,data);
 }
 
@@ -253,6 +258,21 @@ function wsSetup() {
     socket = new WebSocket(url);
     socket.onopen = function() {
         //XXX: TODO What are you going to do here?
+        // get world, code from assignment 4
+        var url = "/world";
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+
+        xhr.onload = function() {
+            if (xhr.readyState === 4) {
+                world = xhr.response; 
+            }
+        }
+
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8')
+        xhr.setRequestHeader('Accept', 'application/json')
+        xhr.send('');
     };
     socket.onerror = function(msg) {
         debug("WebSocket Error:" + msg.data);
@@ -260,12 +280,21 @@ function wsSetup() {
     socket.onmessage = function(msg) {  
         try {
             debug("WebSocket Recv:" + msg.data);
-            //XXX: TODO What are you going to do here?            
+            //XXX: TODO What are you going to do here?  
+            // update world
+            var data = JSON.parse(msg.data);
+            for (var key in data) {
+                world[key] = data[key];
+            }          
+            drawNextFrame();
         } catch (e) {
             alert("socket on message: " + e);
         }
     }; 
 }
+
+
+
 
 wsSetup();
 
