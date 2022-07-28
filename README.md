@@ -5,7 +5,7 @@ CMPUT404-assignment-websockets
 
 See requirements.org (plain-text) for a description of the project.
 
-Make a shared state Websockets drawing program
+Make a shared state Websockets drawing program.
 
 Prereqs
 =======
@@ -20,9 +20,9 @@ pip install -r requirements.txt
 Contributors / Licensing
 ========================
 
-Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle.
+Generally, everything is LICENSED under the Apache 2 license by Abram Hindle.
 
-freetests.py is LICENSE'D under a BSD-like license:
+freetests.py is LICENSED under a BSD-like license:
 
 From ws4py
 
